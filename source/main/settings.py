@@ -49,7 +49,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'history_service.startup.StartupMiddleware',
+    # 'history_service.startup.StartupMiddleware',
 ]
 
 ROOT_URLCONF = 'main.urls'
@@ -122,3 +122,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+
+
+# Celery Configuration Options
+CELERY_TIMEZONE = "Australia/Tasmania"
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60

@@ -2,6 +2,7 @@ from pip._vendor import requests
 
 from history_service.models import CommitsHistory, Links
 
+PER_PAGE = '100'
 
 class CommitSaver:
     def __init__(self, LinkObject):
@@ -26,11 +27,11 @@ class CommitSaver:
         self._define_resource()  # отладка.
         if self.source == 'github':
             api_url = 'https://api.github.com/repos/' + self.url_parts[3] + '/' + self.url_parts[
-                4] + '/commits?per_page=100'
+                4] + '/commits?per_page=' + PER_PAGE
             return api_url
         elif self.source == 'gitlab':
             api_url = 'https://gitlab.com/api/v4/projects/' + self.url_parts[3] + '%2F' + self.url_parts[4] \
-                      + '/repository/commits?per_page=100'
+                      + '/repository/commits?per_page=' + PER_PAGE
             return api_url
         else:
             raise ValueError('Url - не корректный')
@@ -39,6 +40,8 @@ class CommitSaver:
         self._define_resource()
         response_list = []
         response = requests.get(self._make_api_path())
+        if response.headers['status'].split(' ')[0] != '200':
+            raise ValueError(f'Somthing went wrong \n {response.headers["status"]}')
         response_list.append(response.json())
         while True:
             if 'link' in response.headers or 'Link' in response.headers:
@@ -79,6 +82,9 @@ class CommitSaver:
             for commit in response:
                 try:
                     current_commits.get(commit_id=commit[id_name])
+
+                except TypeError:
+                    raise TypeError('')
                 except CommitsHistory.DoesNotExist:
                     commit_in_history = CommitsHistory(link=self.object, commit_id=commit[id_name], commit_json=commit)
                     commit_histories.append(commit_in_history)
