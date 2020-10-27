@@ -1,6 +1,5 @@
 import schedule
 import time
-
 from history_service.views import BulkCommitSaver
 
 

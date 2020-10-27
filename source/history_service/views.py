@@ -40,8 +40,6 @@ class CommitSaver:
         self._define_resource()
         response_list = []
         response = requests.get(self._make_api_path())
-        if response.headers['status'].split(' ')[0] != '200':
-            raise ValueError(f'Somthing went wrong \n {response.headers["status"]}')
         response_list.append(response.json())
         while True:
             if 'link' in response.headers or 'Link' in response.headers:
