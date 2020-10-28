@@ -40,6 +40,8 @@ class CommitSaver:
         self._define_resource()
         response_list = []
         response = requests.get(self._make_api_path())
+        if response.status_code != 200:
+            raise ConnectionError('Somthing wen wrong')
         response_list.append(response.json())
         while True:
             if 'link' in response.headers or 'Link' in response.headers:
